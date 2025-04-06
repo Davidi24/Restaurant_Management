@@ -1,0 +1,16 @@
+server:
+  port: 10
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://admin:pass@localhost:27017/test?authSource=admin}
+
+  cloud:
+    gateway:
+      routes:
+        - id: USERSERVICE
+          uri: http://localhost:9000
+          predicates:
+            - Path=/manager/**, /admin/**
+

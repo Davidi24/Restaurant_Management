@@ -1,0 +1,70 @@
+
+services:
+  # MongoDB Service
+  mongodb:
+    container_name: my_mongo_db
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: pass
+    volumes:
+      - mongo:/data
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  # Mongo Express (for managing MongoDB via web interface)
+  mongo-express:
+    container_name: my_mongo_express
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
+      ME_CONFIG_MONGODB_SERVER: my_mongo_db
+    networks:
+      - microservices-net
+
+  # PostgreSQL Service
+  postgres:
+    container_name: my_pg_sql
+    image: postgres
+    environment:
+      POSTGRES_USER: ${admin}
+      POSTGRES_PASSWORD: 123321
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+
+
+  # Config Server Service
+  config-server:
+    container_name: config_server
+    build: ./services/config-server
+    env_file:
+      - .env
+    ports:
+      - "8888:8888"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+networks:
+  microservices-net:
+    driver: bridge
+
+volumes:
+  mongo:
+  postgres:

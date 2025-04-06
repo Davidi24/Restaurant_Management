@@ -1,0 +1,11 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: gateway-service
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
+
+
+

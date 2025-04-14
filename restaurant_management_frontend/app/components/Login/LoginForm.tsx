@@ -21,9 +21,13 @@ function LoginForm() {
             console.log('Login successful:', data);
             router.replace('/admin');
             setloading(false)
-        } catch (err: any) {
-            setError(err.message || 'An unexpected error occurred');
-            setloading(false)
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('An unexpected error occurred');
+            }
+            setloading(false);
         }
     };
 

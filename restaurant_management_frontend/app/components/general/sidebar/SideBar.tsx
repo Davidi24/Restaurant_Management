@@ -7,7 +7,11 @@ function SideBar() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     useEffect(() => {
-        function handleClickOutside(e: any) {
+        function handleClickOutside(e: MouseEvent) {
+            if (
+                !(e.target instanceof HTMLElement)
+            ) return;
+    
             if (
                 !e.target.closest('#dropdown-user') &&
                 !e.target.closest('[data-user-button]')
@@ -15,6 +19,7 @@ function SideBar() {
                 setDropdownOpen(false);
             }
         }
+    
         document.addEventListener('click', handleClickOutside);
         return () => document.removeEventListener('click', handleClickOutside);
     }, []);
